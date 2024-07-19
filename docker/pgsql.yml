@@ -1,0 +1,45 @@
+services:
+  db:
+    image: postgres:alpine
+    container_name: arcson_pg
+    restart: always
+    networks:
+      - postgresql
+    ports:
+      - "54320:5432"
+    environment:
+      POSTGRES_USER: dev
+      POSTGRES_PASSWORD: dev
+    volumes:
+      - local_pgdata:/var/lib/postgresql/data
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    command: postgres -c 'shared_buffers=64MB' -c 'max_connections=10'
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin4_container
+    restart: always
+    networks:
+      - postgresql
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: dev@dev.com
+      PGADMIN_DEFAULT_PASSWORD: dev123
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
+volumes:
+  local_pgdata:
+  pgadmin-data:
+
+networks:
+  postgresql:
+    driver: bridge
