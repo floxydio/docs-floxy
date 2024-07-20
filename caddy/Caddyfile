@@ -1,0 +1,43 @@
+yourdomain.com {
+    root * /var/www/public
+    encode gzip
+
+    # Security headers
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+        X-Frame-Options "DENY"
+        X-Content-Type-Options "nosniff"
+        X-XSS-Protection "1; mode=block"
+        Cache-Control "public, must-revalidate, proxy-revalidate"
+    }
+
+    # Redirect HTTP to HTTPS
+    redir / https://{host}{uri}
+
+    # PHP FastCGI setup
+    php_fastcgi laravel_app:9000 {
+        try_files {path} {path}/ /index.php?{query}
+    }
+
+    # Static file serving
+    file_server /static {
+        root /var/www/public
+        try_files {path} {path}/index.php
+    }
+
+    @api {
+        path /api*
+    }
+    reverse_proxy @api http://your_up {
+        header_up Host {host}
+        header_up X-Real-IP {remote}
+        header_up X-Forwarded-For {remote}
+        header_up X-Forwarded-Proto {scheme}
+    }
+
+    # Deny access to .ht* files
+    @denied {
+        path *.ht*
+    }
+    respond @denied 403
+}

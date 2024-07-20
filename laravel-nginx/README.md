@@ -120,6 +120,15 @@ events {
 }
 
 http {
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
+
+    # Security headers
+    add_header X-Frame-Options DENY;
+    add_header X-Content-Type-Options nosniff;
+    add_header X-XSS-Protection "1; mode=block";
+
+    # Limit request size
+    client_max_body_size 1m;
     server {
         listen 80;
         server_name yourdomain.com;
