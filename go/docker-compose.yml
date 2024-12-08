@@ -1,0 +1,10 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5800:5800"
+    restart: always
+    environment:
+      - ENV=production
