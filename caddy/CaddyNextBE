@@ -19,3 +19,4 @@ domain.com {
 
     # API
     reverse_proxy /api/* 127.0.0.1:3500
+}
