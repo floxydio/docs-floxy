@@ -3,7 +3,7 @@ services:
     image: redis:alpine3.20
     container_name: redis_container
     restart: always
-    command: redis-server --save 20 1 --loglevel warning --requirepass redispassword
+    command: redis-server --save 20 1 --loglevel warning --requirepass dev
     ports:
       - "6379:6379"
     volumes:
